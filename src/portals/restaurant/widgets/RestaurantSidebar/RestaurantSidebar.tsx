@@ -1,0 +1,1 @@
+// Restaurant portal navigation sidebar

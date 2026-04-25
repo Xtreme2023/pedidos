@@ -1,0 +1,1 @@
+// Category, FoodCategory types

@@ -1,0 +1,155 @@
+/* ============================================================
+   DESIGN TOKENS — TumenuYa
+   Importar desde globals.css. Usar en Tailwind con arbitrary values
+   o como var(--token) en clases @layer.
+   ============================================================ */
+
+@layer base {
+  :root {
+    /* Colores de marca */
+    --brand-orange: #FF6B00;
+    --brand-orange-hover: #E55A00;
+    --brand-orange-muted: rgba(255, 107, 0, 0.15);
+    --brand-red: #E63946;
+    --brand-red-hover: #CC2F3C;
+    --brand-red-muted: rgba(230, 57, 70, 0.15);
+
+    /* Superficies dark */
+    --surface-bg:  #0F0F0F;
+    --surface-1:   #1A1A1A;
+    --surface-2:   #2A2A2A;
+    --surface-3:   #3A3A3A;
+    --surface-4:   #4A4A4A;
+
+    /* Bordes */
+    --border-subtle:  #1F1F1F;
+    --border-default: #2A2A2A;
+    --border-strong:  #3A3A3A;
+
+    /* Texto */
+    --text-primary:   #FFFFFF;
+    --text-secondary: #A0A0A0;
+    --text-muted:     #606060;
+    --text-disabled:  #404040;
+
+    /* Estados de pedido */
+    --status-pending:   #F59E0B;
+    --status-preparing: #FF6B00;
+    --status-shipping:  #3B82F6;
+    --status-delivered: #10B981;
+    --status-cancelled: #E63946;
+
+    /* Tipografía */
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Border radius */
+    --radius-xs:   4px;
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --radius-lg:   16px;
+    --radius-xl:   24px;
+    --radius-pill: 9999px;
+
+    /* Sombras */
+    --shadow-sm:           0 2px 8px  rgba(0,0,0,0.60);
+    --shadow-md:           0 4px 16px rgba(0,0,0,0.70);
+    --shadow-lg:           0 8px 32px rgba(0,0,0,0.80);
+    --shadow-glow-orange:  0 0 24px rgba(255,107,0,0.40);
+    --shadow-glow-red:     0 0 24px rgba(230,57,70,0.40);
+
+    /* Transiciones */
+    --transition-fast: 150ms ease;
+    --transition-base: 220ms ease;
+    --transition-slow: 350ms ease;
+
+    /* ── shadcn/ui variables (required) ──────────────────── */
+    --background:          0 0% 6%;
+    --foreground:          0 0% 98%;
+    --card:                0 0% 10%;
+    --card-foreground:     0 0% 98%;
+    --popover:             0 0% 10%;
+    --popover-foreground:  0 0% 98%;
+    --primary:             24 100% 50%;
+    --primary-foreground:  0 0% 100%;
+    --secondary:           0 0% 16%;
+    --secondary-foreground:0 0% 98%;
+    --muted:               0 0% 16%;
+    --muted-foreground:    0 0% 63%;
+    --accent:              0 0% 16%;
+    --accent-foreground:   0 0% 98%;
+    --destructive:         357 71% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border:              0 0% 16%;
+    --input:               0 0% 16%;
+    --ring:                24 100% 50%;
+    --radius:              0.75rem;
+  }
+}
+
+/* ============================================================
+   CLASES DE UTILIDAD GLOBALES
+   ============================================================ */
+
+/* Botones */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--brand-orange);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover  { background-color: var(--brand-orange-hover); box-shadow: var(--shadow-glow-orange); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--surface-2);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+}
+.btn-secondary:hover { background-color: var(--surface-3); }
+
+/* Card estándar */
+.card-dark {
+  background-color: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+/* Badge de estado */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+.badge-pending   { color: #F59E0B; background: rgba(245,158,11,0.12);  border-color: rgba(245,158,11,0.3); }
+.badge-preparing { color: #FF6B00; background: rgba(255,107,0,0.12);   border-color: rgba(255,107,0,0.3); }
+.badge-shipping  { color: #60A5FA; background: rgba(96,165,250,0.12);  border-color: rgba(96,165,250,0.3); }
+.badge-delivered { color: #34D399; background: rgba(52,211,153,0.12);  border-color: rgba(52,211,153,0.3); }
+.badge-cancelled { color: #F87171; background: rgba(248,113,113,0.12); border-color: rgba(248,113,113,0.3); }
+
+/* Scrollbar oculto para carruseles */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

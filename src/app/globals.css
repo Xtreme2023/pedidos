@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import '../shared/styles/tokens.css';
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--surface-bg);
+    color: var(--text-primary);
+    min-height: 100dvh;
+  }
+}

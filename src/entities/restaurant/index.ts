@@ -1,0 +1,1 @@
+// Restaurant entity public API
