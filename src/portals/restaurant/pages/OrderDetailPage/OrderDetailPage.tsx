@@ -43,10 +43,9 @@ export default function RestaurantOrderDetail() {
   const total = ITEMS.reduce((s, i) => s + i.price * i.qty, 0)
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F]">
+    <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl">
       {/* Header */}
-      <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
+      <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20 flex items-center gap-3">
           <Link to="/portal/restaurant" className="w-9 h-9 rounded-full bg-[#2A2A2A] flex items-center justify-center border border-[#3A3A3A]">
             <ArrowLeft className="w-4 h-4 text-white" />
           </Link>
@@ -58,10 +57,9 @@ export default function RestaurantOrderDetail() {
           <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${STATUS_COLOR[status]}`}>
             {STATUS_LABEL[status]}
           </span>
-        </div>
       </header>
 
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
+      <div className="px-4 py-5 space-y-4">
         {/* Info del cliente */}
         <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4">
           <div className="flex items-center gap-3">

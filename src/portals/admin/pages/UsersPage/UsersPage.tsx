@@ -10,11 +10,11 @@ interface User {
 }
 
 const USERS: User[] = [
-  { id: 1, name: 'Admin Root',     email: 'admin@foodapp.mx',       role: 'admin',      joined: '1 Ene 2023',  orders: 0,   status: 'active'   },
+  { id: 1, name: 'Admin Root',     email: 'admin@foodapp.com',       role: 'admin',      joined: '1 Ene 2023',  orders: 0,   status: 'active'   },
   { id: 2, name: 'Ana García',     email: 'ana@gmail.com',          role: 'client',     joined: '5 Feb 2024',  orders: 14,  status: 'active'   },
-  { id: 3, name: 'Marco Rossi',    email: 'marco@trattoria.mx',     role: 'restaurant', joined: '12 Ene 2024', orders: 0,   status: 'active'   },
+  { id: 3, name: 'Marco Rossi',    email: 'marco@trattoria.com',     role: 'restaurant', joined: '12 Ene 2024', orders: 0,   status: 'active'   },
   { id: 4, name: 'Carlos López',   email: 'carlos@hotmail.com',     role: 'client',     joined: '18 Mar 2024', orders: 7,   status: 'active'   },
-  { id: 5, name: 'Yuki Tanaka',    email: 'yuki@sakura.mx',         role: 'restaurant', joined: '3 Feb 2024',  orders: 0,   status: 'active'   },
+  { id: 5, name: 'Yuki Tanaka',    email: 'yuki@sakura.com',         role: 'restaurant', joined: '3 Feb 2024',  orders: 0,   status: 'active'   },
   { id: 6, name: 'Laura Méndez',   email: 'laura@gmail.com',        role: 'client',     joined: '2 Abr 2024',  orders: 3,   status: 'active'   },
   { id: 7, name: 'Luis Spam',      email: 'spam@test.com',          role: 'client',     joined: '10 Abr 2024', orders: 0,   status: 'inactive' },
   { id: 8, name: 'Sofía Ruiz',     email: 'sofia@outlook.com',      role: 'client',     joined: '8 Mar 2024',  orders: 21,  status: 'active'   },
@@ -43,10 +43,9 @@ export default function AdminUsers() {
   const counts = { all: users.length, admin: users.filter(u=>u.role==='admin').length, restaurant: users.filter(u=>u.role==='restaurant').length, client: users.filter(u=>u.role==='client').length }
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F]">
+    <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl">
       {/* Header */}
-      <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-bold text-white">Usuarios</h1>
             <p className="text-xs text-[#606060] mt-0.5">{counts.client} clientes · {counts.restaurant} restaurantes · {counts.admin} admins</p>
@@ -54,10 +53,9 @@ export default function AdminUsers() {
           <button className="flex items-center gap-2 bg-[#FF6B00] hover:bg-[#E55A00] text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all">
             <UserPlus className="w-4 h-4" /> Nuevo usuario
           </button>
-        </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-5 space-y-4">
+      <main className="px-4 py-5 space-y-4">
         {/* Búsqueda y filtros de rol */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">

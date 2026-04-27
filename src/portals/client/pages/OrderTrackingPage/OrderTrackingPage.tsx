@@ -1,20 +1,65 @@
+import { useState, useMemo, Component } from 'react'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, Phone, MessageCircle, CheckCircle2, Circle } from 'lucide-react'
+import { ArrowLeft, Phone, MessageCircle, CheckCircle2, Circle, Shuffle, Navigation } from 'lucide-react'
+import {
+  generateRandomGraph, ALGORITHM_INFO,
+} from '@client/features/track-order/model/routeAlgorithm'
+import type { AlgorithmType, RouteData } from '@client/features/track-order/model/routeAlgorithm'
+import TrackingMap from '@client/features/track-order/ui/TrackingMap'
 
-/* ── Mock timeline ─────────────────────────────────────────── */
+/* ── ErrorBoundary para el mapa ─────────────────────────────── */
+class MapErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
+  state = { error: null }
+  static getDerivedStateFromError(e: Error) { return { error: e.message } }
+  render() {
+    if (this.state.error) return (
+      <div className="w-full h-full bg-[#1A1A1A] flex flex-col items-center justify-center gap-1">
+        <p className="text-[#606060] text-xs">No se pudo cargar el mapa</p>
+        <p className="text-[#3A3A3A] text-[10px] font-mono">{this.state.error}</p>
+      </div>
+    )
+    return this.props.children
+  }
+}
+
+/* ── Timeline ───────────────────────────────────────────────── */
 const TIMELINE = [
   { id: 1, label: 'Pedido recibido',      time: '13:02', done: true,  active: false },
   { id: 2, label: 'Restaurante confirmó', time: '13:04', done: true,  active: false },
   { id: 3, label: 'Preparando tu pedido', time: '13:05', done: true,  active: true  },
-  { id: 4, label: 'En camino',            time: '--:--',  done: false, active: false },
-  { id: 5, label: 'Entregado',            time: '--:--',  done: false, active: false },
+  { id: 4, label: 'En camino',            time: '--:--', done: false, active: false },
+  { id: 5, label: 'Entregado',            time: '--:--', done: false, active: false },
 ]
 
+const ALGOS: AlgorithmType[] = ['dijkstra', 'astar', 'greedy', 'bfs']
+
+function fmt(m: number) {
+  return m >= 1000 ? `${(m / 1000).toFixed(2)} km` : `${Math.round(m)} m`
+}
+
 export default function OrderTrackingPage() {
-  const activeStep = TIMELINE.findIndex(s => s.active)
+  const [graphData, setGraphData]   = useState<RouteData>(() => generateRandomGraph(7))
+  const [algorithm, setAlgorithm]   = useState<AlgorithmType>('dijkstra')
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const pathResult  = useMemo(() => graphData.graph.runAlgorithm(algorithm), [graphData, algorithm])
+  const allNodes    = useMemo(() => Array.from(graphData.graph.nodes.values()), [graphData])
+  const graphEdges  = useMemo(() => graphData.graph.getEdges(), [graphData])
+
+  const info = ALGORITHM_INFO[algorithm]
+
+  function handleRandomize() {
+    setIsAnimating(true)
+    setTimeout(() => {
+      setGraphData(generateRandomGraph(Math.floor(Math.random() * 4) + 6))
+      setIsAnimating(false)
+    }, 300)
+  }
 
   return (
     <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl flex flex-col">
+
       {/* Header */}
       <header className="flex items-center gap-3 px-4 py-4 border-b border-[#1F1F1F]">
         <Link to="/cart" className="w-9 h-9 rounded-full bg-[#1A1A1A] flex items-center justify-center border border-[#2A2A2A]">
@@ -22,7 +67,7 @@ export default function OrderTrackingPage() {
         </Link>
         <div>
           <h1 className="text-lg font-bold text-white">Pedido #FD-0042</h1>
-          <p className="text-xs text-[#FF6B00] font-medium">Preparando tu pedido…</p>
+          <p className="text-xs font-medium" style={{ color: info.color }}>Preparando tu pedido…</p>
         </div>
         <div className="ml-auto text-right">
           <p className="text-xs text-[#606060]">Tiempo estimado</p>
@@ -30,28 +75,116 @@ export default function OrderTrackingPage() {
         </div>
       </header>
 
-      {/* Mapa placeholder */}
-      <div className="mx-4 mt-4 rounded-2xl overflow-hidden relative h-52 bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center">
-        {/* Grid de mapa simulado */}
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'repeating-linear-gradient(#FF6B00 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, #FF6B00 0 1px, transparent 1px 100%)', backgroundSize: '32px 32px' }}
-        />
-        {/* Pin del restaurante */}
-        <div className="absolute top-8 left-16 flex flex-col items-center">
-          <div className="w-8 h-8 rounded-full bg-[#FF6B00] flex items-center justify-center text-sm shadow-[0_0_16px_rgba(255,107,0,0.6)]">🍕</div>
-          <span className="text-[10px] text-[#A0A0A0] mt-1">Restaurante</span>
+      {/* Selector de algoritmo */}
+      <div className="mx-4 mt-4 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-3">
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2">
+            <Navigation className="w-4 h-4" style={{ color: info.color }} />
+            <span className="text-sm font-bold text-white">Algoritmo de ruta</span>
+          </div>
+          <button
+            onClick={handleRandomize}
+            disabled={isAnimating}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-[#A0A0A0] text-xs font-semibold hover:text-white transition-all disabled:opacity-40"
+          >
+            <Shuffle className={`w-3.5 h-3.5 ${isAnimating ? 'animate-spin' : ''}`} />
+            Randomizar grafo
+          </button>
         </div>
-        {/* Pin del repartidor */}
-        <div className="absolute top-16 left-1/2 flex flex-col items-center animate-pulse">
-          <div className="w-8 h-8 rounded-full bg-[#3B82F6] flex items-center justify-center text-sm shadow-[0_0_16px_rgba(59,130,246,0.6)]">🛵</div>
-          <span className="text-[10px] text-[#A0A0A0] mt-1">Repartidor</span>
+
+        {/* Botones de algoritmo */}
+        <div className="grid grid-cols-4 gap-1.5 mb-3">
+          {ALGOS.map(algo => {
+            const a = ALGORITHM_INFO[algo]
+            const active = algorithm === algo
+            return (
+              <button
+                key={algo}
+                onClick={() => setAlgorithm(algo)}
+                className="py-2 rounded-lg text-xs font-bold transition-all border"
+                style={{
+                  background: active ? a.color + '22' : 'transparent',
+                  borderColor: active ? a.color : '#2A2A2A',
+                  color: active ? a.color : '#606060',
+                }}
+              >
+                {a.label}
+              </button>
+            )
+          })}
         </div>
-        {/* Pin del destino */}
-        <div className="absolute bottom-8 right-12 flex flex-col items-center">
-          <div className="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center text-sm shadow-[0_0_16px_rgba(16,185,129,0.6)]">🏠</div>
-          <span className="text-[10px] text-[#A0A0A0] mt-1">Tu casa</span>
+
+        {/* Descripción del algoritmo activo */}
+        <p className="text-[11px] mb-3 px-0.5" style={{ color: info.color + 'BB' }}>
+          {info.description}
+        </p>
+
+        {/* Métricas */}
+        <div className="grid grid-cols-4 gap-1.5 text-center">
+          {[
+            { label: 'Distancia',  value: fmt(pathResult.totalMeters) },
+            { label: 'Paradas',    value: `${Math.max(0, pathResult.path.length - 2)}` },
+            { label: 'Explorados', value: `${pathResult.exploredIds.length}` },
+            { label: 'Nodos',      value: `${allNodes.length}` },
+          ].map(m => (
+            <div key={m.label} className="bg-[#111] rounded-lg py-2">
+              <p className="text-[9px] text-[#606060] uppercase tracking-wide">{m.label}</p>
+              <p className="text-sm font-bold text-white">{m.value}</p>
+            </div>
+          ))}
         </div>
-        <p className="text-[#3A3A3A] text-xs font-mono">[ Integrar Google Maps ]</p>
+
+        {/* Ruta encontrada con coordenadas */}
+        <div className="mt-2.5 space-y-1 max-h-20 overflow-y-auto pr-1">
+          {pathResult.path.map((node, i) => (
+            <div key={node.id} className="flex items-center gap-2 text-xs">
+              <span className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center text-[8px] font-bold text-white"
+                style={{ background: node.type === 'destination' ? '#10B981' : info.color }}>
+                {i + 1}
+              </span>
+              <span className="text-[#A0A0A0] truncate">{node.label}</span>
+              <span className="ml-auto text-[#505060] font-mono shrink-0 text-[9px]">
+                ({node.coord[0].toFixed(4)}, {node.coord[1].toFixed(4)})
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mapa */}
+      <div
+        className={`mx-4 mt-3 rounded-2xl overflow-hidden border border-[#2A2A2A] transition-opacity duration-300 ${isAnimating ? 'opacity-20' : 'opacity-100'}`}
+        style={{ height: '300px' }}
+      >
+        <MapErrorBoundary>
+          <TrackingMap
+            path={pathResult.path}
+            allNodes={allNodes}
+            graphEdges={graphEdges}
+            exploredIds={pathResult.exploredIds}
+            algoColor={info.color}
+          />
+        </MapErrorBoundary>
+      </div>
+
+      {/* Leyenda */}
+      <div className="mx-4 mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-[#606060]">
+        <span className="flex items-center gap-1">
+          <span className="w-3 h-3 rounded-full inline-block" style={{ background: info.color }} />
+          En ruta ({info.label})
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-3 h-3 rounded-full bg-[#64748B] inline-block" />
+          Explorado
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="w-3 h-3 rounded-full bg-[#2A2A3A] border border-[#3A3A4A] inline-block" />
+          No visitado
+        </span>
+        <span className="flex items-center gap-1 ml-auto">
+          <span className="w-4 h-0.5 inline-block" style={{ background: info.color }} />
+          Ruta óptima
+        </span>
       </div>
 
       {/* Repartidor */}
@@ -75,13 +208,12 @@ export default function OrderTrackingPage() {
         </div>
       </div>
 
-      {/* Timeline de estados */}
+      {/* Timeline */}
       <div className="mx-4 mt-4 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4">
         <h3 className="text-sm font-bold text-[#A0A0A0] uppercase tracking-wider mb-4">Estado del pedido</h3>
         <div className="space-y-0">
           {TIMELINE.map((step, i) => (
             <div key={step.id} className="flex gap-3">
-              {/* Línea vertical + ícono */}
               <div className="flex flex-col items-center">
                 {step.done || step.active
                   ? <CheckCircle2 className={`w-5 h-5 flex-shrink-0 ${step.active ? 'text-[#FF6B00]' : 'text-emerald-400'}`} />
@@ -91,11 +223,9 @@ export default function OrderTrackingPage() {
                   <div className={`w-0.5 h-8 mt-1 ${step.done ? 'bg-emerald-400/40' : 'bg-[#2A2A2A]'}`} />
                 )}
               </div>
-              {/* Texto */}
               <div className="pb-6 last:pb-0">
                 <p className={`text-sm font-semibold ${step.active ? 'text-[#FF6B00]' : step.done ? 'text-white' : 'text-[#3A3A3A]'}`}>
-                  {step.label}
-                  {step.active && <span className="ml-2 text-xs animate-pulse">●</span>}
+                  {step.label}{step.active && <span className="ml-2 text-xs animate-pulse">●</span>}
                 </p>
                 <p className="text-xs text-[#606060] mt-0.5">{step.time}</p>
               </div>
@@ -104,9 +234,11 @@ export default function OrderTrackingPage() {
         </div>
       </div>
 
-      {/* Resumen del pedido */}
+      {/* Resumen */}
       <div className="mx-4 mt-4 mb-4 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl px-4 py-3">
-        <p className="text-sm text-[#A0A0A0]">La Trattoria · 3 artículos · <span className="text-[#FF6B00] font-semibold">Bs. 485</span></p>
+        <p className="text-sm text-[#A0A0A0]">
+          {graphData.restaurantName} · 3 artículos · <span className="text-[#FF6B00] font-semibold">Bs. 485</span>
+        </p>
       </div>
     </div>
   )

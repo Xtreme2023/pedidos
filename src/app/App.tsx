@@ -25,7 +25,8 @@ function DemoNav() {
     { to: '/portal/admin/users',      label: '👥 Usuarios' },
   ]
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 overflow-x-auto bg-[#1A1A1A] border-t border-[#2A2A2A] no-scrollbar">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A] border-t border-[#2A2A2A]">
+      <div className="max-w-md mx-auto lg:max-w-2xl overflow-x-auto no-scrollbar">
       <div className="flex gap-1 px-2 py-2 min-w-max">
         {links.map(l => (
           <Link
@@ -40,6 +41,7 @@ function DemoNav() {
             {l.label}
           </Link>
         ))}
+      </div>
       </div>
     </nav>
   )

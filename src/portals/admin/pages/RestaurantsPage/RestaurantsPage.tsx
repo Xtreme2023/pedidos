@@ -45,16 +45,14 @@ export default function AdminRestaurants() {
   const counts = { all: data.length, active: data.filter(r=>r.status==='active').length, pending: data.filter(r=>r.status==='pending').length, suspended: data.filter(r=>r.status==='suspended').length }
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F]">
+    <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl">
       {/* Header */}
       <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20">
-        <div className="max-w-6xl mx-auto">
           <h1 className="text-lg font-bold text-white">Restaurantes</h1>
           <p className="text-xs text-[#606060] mt-0.5">{counts.active} activos · {counts.pending} por aprobar · {counts.suspended} suspendidos</p>
-        </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-5 space-y-4">
+      <main className="px-4 py-5 space-y-4">
         {/* Filtros */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">

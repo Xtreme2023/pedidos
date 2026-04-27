@@ -54,7 +54,7 @@ export default function RestaurantDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-none relative">
+    <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl relative">
       {/* Hero imagen del restaurante */}
       <div className="relative h-52">
         <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-red-800 flex items-center justify-center">
@@ -155,7 +155,7 @@ export default function RestaurantDetailPage() {
 
       {/* Botón flotante del carrito */}
       {cartCount > 0 && (
-        <div className="fixed bottom-14 left-0 right-0 px-4 z-40 max-w-md mx-auto">
+        <div className="fixed bottom-14 left-0 right-0 px-4 z-40 max-w-md mx-auto lg:max-w-2xl">
           <Link
             to="/cart"
             className="flex items-center justify-between bg-[#FF6B00] text-white rounded-xl px-5 py-4 shadow-[0_8px_32px_rgba(255,107,0,0.5)]"

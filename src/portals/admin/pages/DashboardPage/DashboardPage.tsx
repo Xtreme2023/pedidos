@@ -42,10 +42,9 @@ export default function AdminDashboard() {
   const maxOrders = Math.max(...WEEKLY.map(w => w.orders))
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F]">
+    <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl">
       {/* Topbar */}
-      <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <header className="bg-[#1A1A1A] border-b border-[#2A2A2A] px-4 py-4 sticky top-0 z-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center text-white text-lg">⚙</div>
             <div>
@@ -57,10 +56,9 @@ export default function AdminDashboard() {
             <div className="w-2 h-2 bg-emerald-400 rounded-full" />
             Sistema operativo
           </div>
-        </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+      <main className="px-4 py-6 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {KPIS.map(kpi => (
