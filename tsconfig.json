@@ -15,17 +15,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@app/*": ["src/app/*"],
-      "@entities/*": ["src/entities/*"],
-      "@shared/*": ["src/shared/*"],
-      "@portals/*": ["src/portals/*"],
-      "@admin/*": ["src/portals/admin/*"],
-      "@client/*": ["src/portals/client/*"],
-      "@restaurant/*": ["src/portals/restaurant/*"]
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@entities/*": ["./src/entities/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@portals/*": ["./src/portals/*"],
+      "@admin/*": ["./src/portals/admin/*"],
+      "@client/*": ["./src/portals/client/*"],
+      "@restaurant/*": ["./src/portals/restaurant/*"]
     }
   },
   "include": ["src"],
