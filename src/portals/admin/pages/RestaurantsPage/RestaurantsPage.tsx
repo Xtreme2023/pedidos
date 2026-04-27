@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Filter, ChevronDown, CheckCircle, XCircle, MoreVertical } from 'lucide-react'
+import { Search, CheckCircle, XCircle, MoreVertical } from 'lucide-react'
 
 /* ── Mock data ─────────────────────────────────────────────── */
 type RStatus = 'active' | 'pending' | 'suspended'

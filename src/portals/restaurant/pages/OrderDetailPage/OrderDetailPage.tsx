@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Phone, Clock, MapPin, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Phone, Clock, MapPin } from 'lucide-react'
 
 type Status = 'pending' | 'preparing' | 'shipping' | 'delivered' | 'cancelled'
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, MapPin, CreditCard, ChevronRight, Plus, Minus, Trash2 } from 'lucide-react'
+import { ArrowLeft, MapPin, ChevronRight, Plus, Minus, Trash2 } from 'lucide-react'
 
 /* ── Mock data ─────────────────────────────────────────────── */
 const CART_ITEMS = [

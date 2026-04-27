@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { TrendingUp, ShoppingBag, Clock, DollarSign, Bell, ChevronRight, Users } from 'lucide-react'
+import { ShoppingBag, Clock, DollarSign, Bell, ChevronRight, Users } from 'lucide-react'
 
 /* ── Mock data ─────────────────────────────────────────────── */
 const STATS = [

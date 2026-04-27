@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Star, Clock, MapPin, Plus, Minus, ShoppingCart } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, Star, Clock, Plus, Minus } from 'lucide-react'
 
 /* ── Mock data ─────────────────────────────────────────────── */
 const SECTIONS = [
@@ -29,7 +29,6 @@ type CartItem = { id: number; name: string; price: number; qty: number }
 
 /* ── Componente ─────────────────────────────────────────────── */
 export default function RestaurantDetailPage() {
-  const { id } = useParams()
   const [cart, setCart] = useState<CartItem[]>([])
   const [activeSection, setActiveSection] = useState('populares')
 

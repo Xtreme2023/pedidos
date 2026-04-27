@@ -1,1 +1,1 @@
-export { OrderTrackingPage } from './OrderTrackingPage'
+export { default as OrderTrackingPage } from './OrderTrackingPage'
