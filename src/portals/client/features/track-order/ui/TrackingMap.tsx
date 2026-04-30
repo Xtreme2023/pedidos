@@ -42,16 +42,18 @@ interface Props {
   graphEdges: Array<[Coord, Coord]>
   exploredIds: string[]
   algoColor: string
+  tileUrl: string
+  tileAttribution: string
 }
 
-export default function TrackingMap({ path, allNodes, graphEdges, exploredIds, algoColor }: Props) {
-  const pathCoords = path.map(n => n.coord as [number, number])
-  const center: [number, number] = pathCoords[0] ?? [-17.3895, -66.1568]
+export default function TrackingMap({ path, allNodes, graphEdges, exploredIds, algoColor, tileUrl, tileAttribution }: Props) {
+  const allCoords = allNodes.map(n => n.coord as [number, number])
+  const center: [number, number] = allCoords[0] ?? [-17.3895, -66.1568]
 
   const inPath = new Set(path.map(n => n.id))
   const explored = new Set(exploredIds)
 
-  // Aristas de la ruta óptima para no redibujarlas en gris
+  const pathCoords = path.map(n => n.coord as [number, number])
   const pathEdges = new Set(
     path.slice(0, -1).map((n, i) => [n.coord, path[i+1].coord].map(c => c.join(',')).sort().join('||'))
   )
@@ -71,13 +73,10 @@ export default function TrackingMap({ path, allNodes, graphEdges, exploredIds, a
       center={center}
       zoom={14}
       style={{ width: '100%', height: '100%' }}
-      scrollWheelZoom={false}
+      scrollWheelZoom
       key={center.join(',')}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <TileLayer url={tileUrl} attribution={tileAttribution} />
 
       {/* Aristas del grafo (gris punteado) */}
       {graphEdges.map(([a, b], i) => {
@@ -115,7 +114,7 @@ export default function TrackingMap({ path, allNodes, graphEdges, exploredIds, a
         </Marker>
       ))}
 
-      <FitBounds coords={pathCoords} />
+      <FitBounds coords={allCoords} />
     </MapContainer>
   )
 }

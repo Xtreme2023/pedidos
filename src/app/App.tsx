@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, Link, useLocation } from 'react-router-dom'
 import HomePage from '@client/pages/HomePage/HomePage'
 import RestaurantDetailPage from '@client/pages/RestaurantDetailPage/RestaurantDetailPage'
+import CategoryPage from '@client/pages/CategoryPage/CategoryPage'
 import CheckoutPage from '@client/pages/CheckoutPage/CheckoutPage'
 import OrderTrackingPage from '@client/pages/OrderTrackingPage/OrderTrackingPage'
 import RestaurantDashboard from '@restaurant/pages/DashboardPage/DashboardPage'
@@ -56,6 +57,7 @@ export default function App() {
           {/* Portal cliente */}
           <Route path="/"                          element={<HomePage />} />
           <Route path="/restaurant/:id"            element={<RestaurantDetailPage />} />
+          <Route path="/category/:slug"            element={<CategoryPage />} />
           <Route path="/cart"                      element={<CheckoutPage />} />
           <Route path="/tracking/:id"              element={<OrderTrackingPage />} />
           {/* Portal restaurante */}

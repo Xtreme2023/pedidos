@@ -1,36 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Search, MapPin, Bell, Star, Clock, ChevronRight } from 'lucide-react'
-import imgPique       from '@/assets/pique.jpeg'
-import imgAnticucho   from '@/assets/anticucho.jpeg'
-import imgCharque     from '@/assets/charque.jpeg'
-import imgSaltena     from '@/assets/saltena.jpeg'
-import imgFricase     from '@/assets/fricase.jpeg'
-import imgHamburgesa  from '@/assets/hamburgesa.jpeg'
+import { CATEGORIES, RESTAURANTS } from '../../data/mockData'
 
-/* ── Mock data ─────────────────────────────────────────────── */
-const CATEGORIES = [
-  { id: 1,  emoji: '🍖', name: 'Pique'      },
-  { id: 2,  emoji: '🥩', name: 'Charque'    },
-  { id: 3,  emoji: '🍲', name: 'Fricasé'    },
-  { id: 4,  emoji: '🍔', name: 'Burgers'    },
-  { id: 5,  emoji: '🥟', name: 'Salteñas'   },
-  { id: 6,  emoji: '🍳', name: 'Silpancho'  },
-  { id: 7,  emoji: '🍢', name: 'Anticuchos' },
-  { id: 8,  emoji: '🍕', name: 'Pizza'      },
-  { id: 9,  emoji: '🍗', name: 'Pollo'      },
-  { id: 10, emoji: '🍰', name: 'Postres'    },
-]
-
-const RESTAURANTS = [
-  { id: 1, name: 'El Pique de Don Lucho',   category: 'Pique Macho',   rating: 4.9, time: '20-30', price: '$',   gradient: 'from-red-700 to-orange-800',    emoji: '🍖', image: imgPique,      deliveryFee: 'Gratis', promo: '20% OFF' },
-  { id: 2, name: 'Doña Carmen Fricasé',     category: 'Cocina típica', rating: 4.8, time: '30-40', price: '$$',  gradient: 'from-amber-700 to-yellow-800',  emoji: '🍲', image: imgFricase,    deliveryFee: 'Gratis', promo: null      },
-  { id: 3, name: 'La Burguesía',            category: 'Hamburguesas',  rating: 4.6, time: '15-25', price: '$',   gradient: 'from-yellow-600 to-orange-700', emoji: '🍔', image: imgHamburgesa, deliveryFee: 'Gratis', promo: 'NUEVO'   },
-  { id: 4, name: 'El Charqueador',          category: 'Charque',       rating: 4.7, time: '25-35', price: '$$',  gradient: 'from-stone-600 to-amber-800',   emoji: '🥩', image: imgCharque,    deliveryFee: 'Bs. 10', promo: null      },
-  { id: 5, name: 'Anticuchos Doña Fili',    category: 'Anticuchos',    rating: 4.9, time: '20-30', price: '$',   gradient: 'from-orange-700 to-red-900',    emoji: '🍢', image: imgAnticucho,  deliveryFee: 'Gratis', promo: '10% OFF' },
-  { id: 6, name: 'La Salteñería Central',   category: 'Salteñas',      rating: 4.8, time: '10-20', price: '$',   gradient: 'from-yellow-700 to-amber-900',  emoji: '🥟', image: imgSaltena,    deliveryFee: 'Gratis', promo: null      },
-]
-
-/* ── Componente ─────────────────────────────────────────────── */
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl">
@@ -46,7 +17,6 @@ export default function HomePage() {
           </div>
           <button className="relative w-10 h-10 rounded-full bg-[#1A1A1A] flex items-center justify-center border border-[#2A2A2A]">
             <Bell className="w-4.5 h-4.5 text-white" />
-            {/* Punto de notificación */}
             <span className="absolute top-2 right-2 w-2 h-2 bg-[#FF6B00] rounded-full" />
           </button>
         </div>
@@ -84,8 +54,9 @@ export default function HomePage() {
         </div>
         <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
           {CATEGORIES.map((cat, i) => (
-            <button
+            <Link
               key={cat.id}
+              to={`/category/${cat.slug}`}
               className={`flex-shrink-0 flex flex-col items-center gap-1.5 px-4 py-2.5 rounded-xl border transition-all ${
                 i === 0
                   ? 'bg-[#FF6B00]/15 border-[#FF6B00]/40 text-[#FF6B00]'
@@ -94,12 +65,12 @@ export default function HomePage() {
             >
               <span className="text-2xl">{cat.emoji}</span>
               <span className="text-xs font-medium">{cat.name}</span>
-            </button>
+            </Link>
           ))}
         </div>
       </section>
 
-      {/* Restaurantes destacados */}
+      {/* Restaurantes cerca de ti */}
       <section className="mt-6 px-4 pb-6">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-base font-bold text-white">Cerca de ti</h3>
@@ -127,7 +98,6 @@ export default function HomePage() {
                   <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" /> {r.rating}
                 </span>
               </div>
-              {/* Info */}
               <div className="p-3">
                 <h4 className="font-bold text-white text-sm">{r.name}</h4>
                 <p className="text-[#606060] text-xs mt-0.5">{r.category} · {r.price}</p>

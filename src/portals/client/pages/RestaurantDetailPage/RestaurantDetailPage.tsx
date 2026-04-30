@@ -1,34 +1,30 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Star, Clock, Plus, Minus } from 'lucide-react'
+import { RESTAURANTS } from '../../data/mockData'
 
-/* ── Mock data ─────────────────────────────────────────────── */
 const SECTIONS = [
   {
     id: 'populares', name: 'Más pedidos', items: [
-      { id: 1, name: 'Pizza Margherita', desc: 'Salsa de tomate, mozzarella, albahaca fresca', price: 185, emoji: '🍕', available: true },
-      { id: 2, name: 'Pizza Pepperoni',  desc: 'Pepperoni, mozzarella, salsa ahumada', price: 210, emoji: '🍕', available: true },
+      { id: 1, name: 'Plato especial',    desc: 'La especialidad de la casa, preparada al momento', price: 55,  emoji: '🍽', available: true  },
+      { id: 2, name: 'Combo familiar',    desc: 'Para compartir, incluye bebida y postre',          price: 95,  emoji: '🥘', available: true  },
     ],
   },
   {
-    id: 'entradas', name: 'Entradas', items: [
-      { id: 3, name: 'Bruschetta',  desc: 'Pan tostado con tomate, albahaca y aceite de oliva', price: 95,  emoji: '🥖', available: true },
-      { id: 4, name: 'Ensalada César', desc: 'Lechuga romana, croutones, parmesano, aderezo', price: 115, emoji: '🥗', available: true },
-      { id: 5, name: 'Calamares a la romana', desc: 'Aros de calamar fritos con alioli limón', price: 145, emoji: '🦑', available: false },
-    ],
-  },
-  {
-    id: 'pastas', name: 'Pastas', items: [
-      { id: 6, name: 'Carbonara',  desc: 'Spaghetti, panceta, huevo, parmesano, pimienta', price: 175, emoji: '🍝', available: true },
-      { id: 7, name: 'Penne al ragù', desc: 'Salsa boloñesa tradicional, carne molida', price: 165, emoji: '🍝', available: true },
+    id: 'extras', name: 'Extras', items: [
+      { id: 3, name: 'Refresco',          desc: 'Bebida fría de 500 ml',                            price: 15,  emoji: '🥤', available: true  },
+      { id: 4, name: 'Ensalada',          desc: 'Ensalada fresca de temporada',                     price: 20,  emoji: '🥗', available: true  },
+      { id: 5, name: 'Postre del día',    desc: 'Varía según disponibilidad',                       price: 25,  emoji: '🍮', available: false },
     ],
   },
 ]
 
 type CartItem = { id: number; name: string; price: number; qty: number }
 
-/* ── Componente ─────────────────────────────────────────────── */
 export default function RestaurantDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const restaurant = RESTAURANTS.find(r => r.id === Number(id))
+
   const [cart, setCart] = useState<CartItem[]>([])
   const [activeSection, setActiveSection] = useState('populares')
 
@@ -52,16 +48,31 @@ export default function RestaurantDetailPage() {
     })
   }
 
+  if (!restaurant) {
+    return (
+      <div className="min-h-screen bg-[#0F0F0F] flex flex-col items-center justify-center gap-4">
+        <span className="text-6xl opacity-40">🍽</span>
+        <p className="text-[#606060] text-sm">Restaurante no encontrado</p>
+        <Link to="/" className="px-5 py-2.5 bg-[#FF6B00] text-white text-sm font-semibold rounded-xl">
+          Volver al inicio
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[#0F0F0F] max-w-md mx-auto lg:max-w-2xl relative">
       {/* Hero imagen del restaurante */}
       <div className="relative h-52">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-red-800 flex items-center justify-center">
-          <span className="text-9xl opacity-30">🍕</span>
-        </div>
-        {/* Gradiente oscuro abajo */}
+        {restaurant.image
+          ? <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
+          : (
+            <div className={`absolute inset-0 bg-gradient-to-br ${restaurant.gradient} flex items-center justify-center`}>
+              <span className="text-9xl opacity-30">{restaurant.emoji}</span>
+            </div>
+          )
+        }
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-transparent to-transparent" />
-        {/* Botón atrás */}
         <Link to="/" className="absolute top-4 left-4 w-9 h-9 rounded-full bg-black/50 backdrop-blur flex items-center justify-center border border-white/10">
           <ArrowLeft className="w-4 h-4 text-white" />
         </Link>
@@ -69,17 +80,17 @@ export default function RestaurantDetailPage() {
 
       {/* Info del restaurante */}
       <div className="px-4 -mt-6 relative z-10">
-        <h1 className="text-2xl font-bold text-white">La Trattoria</h1>
-        <p className="text-[#A0A0A0] text-sm mt-0.5">Cocina italiana · $$</p>
+        <h1 className="text-2xl font-bold text-white">{restaurant.name}</h1>
+        <p className="text-[#A0A0A0] text-sm mt-0.5">{restaurant.category} · {restaurant.price}</p>
         <div className="flex items-center gap-4 mt-2">
           <span className="flex items-center gap-1 text-sm text-[#A0A0A0]">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /> 4.8 (320 reseñas)
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" /> {restaurant.rating}
           </span>
           <span className="flex items-center gap-1 text-sm text-[#A0A0A0]">
-            <Clock className="w-4 h-4" /> 25-35 min
+            <Clock className="w-4 h-4" /> {restaurant.time} min
           </span>
-          <span className="flex items-center gap-1 text-sm text-emerald-400 font-medium">
-            🛵 Envío gratis
+          <span className={`flex items-center gap-1 text-sm font-medium ${restaurant.deliveryFee === 'Gratis' ? 'text-emerald-400' : 'text-[#A0A0A0]'}`}>
+            {restaurant.deliveryFee === 'Gratis' ? '🛵 Envío gratis' : `🛵 ${restaurant.deliveryFee}`}
           </span>
         </div>
       </div>
@@ -114,7 +125,6 @@ export default function RestaurantDetailPage() {
                     key={item.id}
                     className={`flex gap-3 bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-3 ${!item.available ? 'opacity-40' : ''}`}
                   >
-                    {/* Emoji placeholder de imagen */}
                     <div className="w-20 h-20 rounded-lg bg-[#2A2A2A] flex items-center justify-center flex-shrink-0 text-3xl">
                       {item.emoji}
                     </div>
@@ -123,7 +133,6 @@ export default function RestaurantDetailPage() {
                       <p className="text-[#606060] text-xs mt-0.5 line-clamp-2">{item.desc}</p>
                       <div className="flex items-center justify-between mt-2">
                         <p className="font-bold text-[#FF6B00]">Bs. {item.price}</p>
-                        {/* Controles cantidad */}
                         {item.available && (
                           <div className="flex items-center gap-2">
                             {qty > 0 ? (
