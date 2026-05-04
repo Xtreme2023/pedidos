@@ -35,7 +35,7 @@ const TIMELINE = [
   { id: 5, label: 'Entregado',            time: '--:--', done: false, active: false },
 ]
 
-const ALGOS: AlgorithmType[] = ['dijkstra', 'astar', 'greedy', 'bfs']
+const ALGOS: AlgorithmType[] = ['dijkstra', 'astar', 'greedy', 'bfs', 'dfs']
 
 const TILES = {
   dark: {
@@ -157,7 +157,7 @@ const visibleExploredIds = hasAnimStarted
         </div>
 
         {/* Botones de algoritmo */}
-        <div className="grid grid-cols-4 gap-1.5 mb-3">
+        <div className="grid grid-cols-5 gap-1.5 mb-3">
           {ALGOS.map(algo => {
             const a = ALGORITHM_INFO[algo]
             const active = algorithm === algo

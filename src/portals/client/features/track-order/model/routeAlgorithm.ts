@@ -1,6 +1,6 @@
 export type Coord = [number, number]
 export type NodeType = 'restaurant' | 'waypoint' | 'destination'
-export type AlgorithmType = 'dijkstra' | 'astar' | 'greedy' | 'bfs'
+export type AlgorithmType = 'dijkstra' | 'astar' | 'greedy' | 'bfs' | 'dfs'
 
 export interface RouteNode {
   id: string
@@ -25,6 +25,7 @@ export const ALGORITHM_INFO: Record<AlgorithmType, { label: string; color: strin
   astar:    { label: 'A*',        color: '#8B5CF6', description: 'Óptimo · distancia + heurística'    },
   greedy:   { label: 'Greedy',    color: '#F59E0B', description: 'Rápido · solo heurística (no óptimo)' },
   bfs:      { label: 'BFS',       color: '#10B981', description: 'Mínimo saltos · ignora distancias'  },
+  dfs:      { label: 'DFS',       color: '#EC4899', description: 'Explora en profundidad · no óptimo'  },
 }
 
 // ── Min-Heap (árbol binario mínimo) para cola de prioridad ───────────────────
@@ -220,12 +221,33 @@ export class RouteGraph {
     return { path, exploredIds: [...visited], totalMeters: this._meters(path) }
   }
 
+  // ── DFS ── pila LIFO, explora en profundidad (no óptimo) ────────────────────
+  dfs(startId: string, endId: string): PathResult {
+    const prev = new Map<string, string | null>()
+    const visited = new Set<string>()
+    for (const id of this.nodes.keys()) prev.set(id, null)
+    const stack: string[] = [startId]
+
+    while (stack.length > 0) {
+      const id = stack.pop()!
+      if (visited.has(id)) continue
+      visited.add(id)
+      if (id === endId) break
+      for (const { to } of this.neighbors(id)) {
+        if (!visited.has(to)) { prev.set(to, id); stack.push(to) }
+      }
+    }
+    const path = this._rebuildPath(prev, endId)
+    return { path, exploredIds: [...visited], totalMeters: this._meters(path) }
+  }
+
   runAlgorithm(algo: AlgorithmType): PathResult {
     switch (algo) {
       case 'dijkstra': return this.dijkstra('restaurant', 'destination')
       case 'astar':    return this.astar('restaurant', 'destination')
       case 'greedy':   return this.greedy('restaurant', 'destination')
       case 'bfs':      return this.bfs('restaurant', 'destination')
+      case 'dfs':      return this.dfs('restaurant', 'destination')
     }
   }
 }
